@@ -1,12 +1,17 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from .models import Trip
+from .models import Trip, User
 
 
 class UserSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(
+            required=True,
+            validators=[UniqueValidator(queryset=User.objects.all())]
+            )
     password1 = serializers.CharField(write_only=True)
     password2 = serializers.CharField(write_only=True)
     group = serializers.CharField()
@@ -25,6 +30,7 @@ class UserSerializer(serializers.ModelSerializer):
         }
         data['password'] = validated_data['password1']
         user = self.Meta.model.objects.create_user(**data)
+        user.set_email(validated_data['email'])
         user.groups.add(group)
         user.save()
         return user
@@ -33,7 +39,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = get_user_model()
         fields = (
             'id', 'username', 'password1', 'password2',
-            'first_name', 'last_name', 'group',
+            'email', 'first_name', 'last_name', 'group',
             'photo',
         )
         read_only_fields = ('id',)

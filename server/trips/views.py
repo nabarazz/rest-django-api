@@ -13,6 +13,7 @@ class SignUpView(generics.CreateAPIView):
 
 
 class LogInView(TokenObtainPairView):
+    
     serializer_class = LogInSerializer
 
 
