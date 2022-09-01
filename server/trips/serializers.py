@@ -30,7 +30,6 @@ class UserSerializer(serializers.ModelSerializer):
         }
         data['password'] = validated_data['password1']
         user = self.Meta.model.objects.create_user(**data)
-        user.set_email(validated_data['email'])
         user.groups.add(group)
         user.save()
         return user
