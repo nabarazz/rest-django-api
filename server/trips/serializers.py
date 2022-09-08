@@ -55,9 +55,9 @@ class LogInSerializer(TokenObtainPairSerializer):
         for key, value in user_data.items():
             if key != 'id':
                 token[key] = value
-                token['user_id'] = user_data['id']
-                token['username'] = user_data['username']
-                token['email'] = user_data['email']
+                token['user_id'] = 'id'
+                token['username'] = 'username'
+                token['email'] = 'email'
 
         return token
     
