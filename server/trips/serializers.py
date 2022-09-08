@@ -50,18 +50,14 @@ class LogInSerializer(TokenObtainPairSerializer):
     
     def get_token(cls, user):
         token = super().get_token(user)
-        token['username'] = user.username
-        token['email'] = user.email
-        token['first_name'] = user.first_name
-        token['last_name'] = user.last_name
-        token = super().get_token(**token)
+        
 
         user_data = UserSerializer(user).data
         for key, value in user_data.items():
             if key != 'id':
                 token[key] = value
                 
-
+        
         return token
     
     
