@@ -9,6 +9,7 @@ from .models import Trip, User
 
 
 class UserSerializer(serializers.ModelSerializer):
+
     email = serializers.EmailField(
             required=True,
             validators=[UniqueValidator(queryset=User.objects.all())]
@@ -17,11 +18,13 @@ class UserSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(write_only=True)
     group = serializers.CharField()
 
+    # validation_data
     def validate(self, data):
         if data['password1'] != data['password2']:
             raise serializers.ValidationError('Passwords must match.')
         return data
 
+    # create_user
     def create(self, validated_data):
         group_data = validated_data.pop('group')
         group, _ = Group.objects.get_or_create(name=group_data)
@@ -34,6 +37,7 @@ class UserSerializer(serializers.ModelSerializer):
         user.groups.add(group)
         user.save()
         return user
+
 
     class Meta:
         model = get_user_model()
@@ -55,6 +59,7 @@ class LogInSerializer(TokenObtainPairSerializer):
         data['access'] = str(refresh.access_token)
         data['username'] = self.user.username
         data['email'] = self.user.email
+        data['group'] = self.user.group
         return data
 
 
