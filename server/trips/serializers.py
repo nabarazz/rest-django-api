@@ -57,7 +57,6 @@ class LogInSerializer(TokenObtainPairSerializer):
                 token[key] = value
                 token['user_id'] = user_data['id']
                 token['username'] = user_data['username']
-                token['group'] = user.groups.first().name
                 token['email'] = user_data['email']
 
         return token
