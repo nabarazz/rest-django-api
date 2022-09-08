@@ -1,3 +1,4 @@
+import email
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from rest_framework import serializers
@@ -46,23 +47,15 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class LogInSerializer(TokenObtainPairSerializer):
-    @classmethod
-    
-    def get_token(cls, user):
-        token = super().get_token(user)
-        
-
-        user_data = UserSerializer(user).data
-        for key, value in user_data.items():
-            if key != 'id':
-                token[key] = value
-                
-        
-        return token
-    
-    
-
-
+    #display token and username and email
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        refresh = self.get_token(self.user)
+        data['refresh'] = str(refresh)
+        data['access'] = str(refresh.access_token)
+        data['username'] = self.user.username
+        data['email'] = self.user.email
+        return data
 
 
 class TripSerializer(serializers.ModelSerializer):
