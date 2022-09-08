@@ -41,18 +41,30 @@ class UserSerializer(serializers.ModelSerializer):
             'email', 'first_name', 'last_name', 'group',
             'photo',
         )
+        
         read_only_fields = ('id',)
 
 
 class LogInSerializer(TokenObtainPairSerializer):
     @classmethod
+    
     def get_token(cls, user):
         token = super().get_token(user)
+
         user_data = UserSerializer(user).data
         for key, value in user_data.items():
             if key != 'id':
                 token[key] = value
+                token['user_id'] = user_data['id']
+                token['username'] = user_data['username']
+                token['group'] = user.groups.first().name
+                token['email'] = user_data['email']
+
         return token
+    
+    
+
+
 
 
 class TripSerializer(serializers.ModelSerializer):

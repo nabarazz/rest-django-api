@@ -8,6 +8,7 @@ from .serializers import LogInSerializer, NestedTripSerializer, UserSerializer
 
 
 class SignUpView(generics.CreateAPIView):
+    permission_classes = (permissions.AllowAny,)
     queryset = get_user_model().objects.all()
     serializer_class = UserSerializer
 
