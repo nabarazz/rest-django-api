@@ -59,7 +59,7 @@ class LogInSerializer(TokenObtainPairSerializer):
                 token['username'] = 'username'
                 token['email'] = 'email'
 
-        return token
+        return token, user_data
     
     
 
