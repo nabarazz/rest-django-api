@@ -56,7 +56,7 @@ class LogInSerializer(TokenObtainPairSerializer):
             if key != 'id':
                 token[key] = value
 
-        return token, user_data
+        return token
     
     
 
