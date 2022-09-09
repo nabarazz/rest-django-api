@@ -60,6 +60,7 @@ class LogInSerializer(TokenObtainPairSerializer):
         data['username'] = self.user.username
         data['email'] = self.user.email
         data['group'] = self.user.group
+        data['id'] = self.user.id
         return data
 
 
