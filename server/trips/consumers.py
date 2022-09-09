@@ -1,3 +1,4 @@
+
 from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 
@@ -6,6 +7,7 @@ from trips.models import Trip
 
 
 class TaxiConsumer(AsyncJsonWebsocketConsumer):
+
     groups = ['test']
 
     @database_sync_to_async
@@ -28,7 +30,7 @@ class TaxiConsumer(AsyncJsonWebsocketConsumer):
         if 'driver' in user_groups:
             trip_ids = user.trips_as_driver.exclude(
                 status=Trip.COMPLETED
-            ).only('id').values_list('id', flat=True)
+            ).only('id').valugroups = ['test'].values_list('id', flat=True)
         else:
             trip_ids = user.trips_as_rider.exclude(
                 status=Trip.COMPLETED
