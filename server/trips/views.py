@@ -19,12 +19,19 @@ class LogInView(TokenObtainPairView):
     serializer_class = LogInSerializer
 
 
+
+
+
 class TripView(generics.ListCreateAPIView):
     lookup_field = 'id'
     lookup_url_kwarg = 'trip_id'
     serializer_class = NestedTripSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    permissions_classes = (permissions.IsAuthenticated,)
 
+    def perform_create(self, serializer):
+        serializer.save(rider=self.request.user)
+
+        
     def get_queryset(self):
         user = self.request.user
         if user.group == 'driver':
