@@ -30,7 +30,7 @@ class TripView(generics.ListCreateAPIView):
     permissions_classes = (permissions.IsAuthenticated,)
 
     def perform_create(self, serializer):
-        serializer.save(rider=self.request.user)
+        serializer.save(passenger=self.request.user)
         serializer.save(driver=self.request.user)
 
         
@@ -40,6 +40,6 @@ class TripView(generics.ListCreateAPIView):
             return Trip.objects.filter(
                 Q(status=Trip.REQUESTED) | Q(driver=user)
             )
-        if user.group == 'rider':
-            return Trip.objects.filter(rider=user)
+        if user.group == 'passenger':
+            return Trip.objects.filter(passenger=user)
         return Trip.objects.none()

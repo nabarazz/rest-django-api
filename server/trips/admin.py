@@ -13,12 +13,12 @@ class UserAdmin(DefaultUserAdmin):
 class TripAdmin(admin.ModelAdmin):
     fields = (
         'id', 'pick_up_address', 'drop_off_address', 'status',
-        'driver', 'rider',
+        'driver', 'passenger',
         'created', 'updated',
     )
     list_display = (
         'id', 'pick_up_address', 'drop_off_address', 'status',
-        'driver', 'rider',
+        'driver', 'passenger',
         'created', 'updated',
     )
     list_filter = (

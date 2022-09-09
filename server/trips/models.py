@@ -42,12 +42,12 @@ class Trip(models.Model):
         on_delete=models.DO_NOTHING,
         related_name='trips_as_driver'
     )
-    rider = models.ForeignKey(
+    passenger = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         null=True,
         blank=True,
         on_delete=models.DO_NOTHING,
-        related_name='trips_as_rider'
+        related_name='trips_as_passenger'
     )
     
 

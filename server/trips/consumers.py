@@ -32,7 +32,7 @@ class TaxiConsumer(AsyncJsonWebsocketConsumer):
                 status=Trip.COMPLETED
             ).only('id').valugroups = ['test'].values_list('id', flat=True)
         else:
-            trip_ids = user.trips_as_rider.exclude(
+            trip_ids = user.trips_as_passenger.exclude(
                 status=Trip.COMPLETED
             ).only('id').values_list('id', flat=True)
         return map(str, trip_ids)
@@ -69,13 +69,13 @@ class TaxiConsumer(AsyncJsonWebsocketConsumer):
         trip = await self._create_trip(data)
         trip_data = await self._get_trip_data(trip)
 
-        # Send rider requests to all drivers.
+        # Send passenger requests to all drivers.
         await self.channel_layer.group_send(group='drivers', message={
             'type': 'echo.message',
             'data': trip_data
         })
 
-        # Add rider to trip group.
+        # Add passenger to trip group.
         await self.channel_layer.group_add(
             group=f'{trip.id}',
             channel=self.channel_name
@@ -92,7 +92,7 @@ class TaxiConsumer(AsyncJsonWebsocketConsumer):
         trip_id = f'{trip.id}'
         trip_data = await self._get_trip_data(trip)
 
-        # Send update to rider.
+        # Send update to passenger.
         await self.channel_layer.group_send(
             group=trip_id,
             message={
