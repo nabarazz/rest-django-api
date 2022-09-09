@@ -1,3 +1,4 @@
+from lib2to3.pgen2 import driver
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 from rest_framework import generics, permissions
@@ -30,6 +31,7 @@ class TripView(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(rider=self.request.user)
+        serializer.save(driver=self.request.user)
 
         
     def get_queryset(self):
