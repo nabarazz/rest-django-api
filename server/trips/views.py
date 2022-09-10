@@ -27,7 +27,7 @@ class TripView(generics.ListCreateAPIView):
     lookup_field = 'id'
     lookup_url_kwarg = 'trip_id'
     serializer_class = NestedTripSerializer
-    permissions_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated,)
 
     def perform_create(self, serializer):
         serializer.save(passenger=self.request.user)
