@@ -33,9 +33,7 @@ class Trip(models.Model):
     updated = models.DateTimeField(auto_now=True)
     pick_up_address = models.CharField(max_length=255)
     drop_off_address = models.CharField(max_length=255)
-    price = models.FloatField(
-        null=True,
-    )
+    price = models.CharField(max_length=25, null=True)
     
     status = models.CharField(max_length=20, choices=STATUSES, default=REQUESTED)
     driver = models.ForeignKey(
