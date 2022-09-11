@@ -1,11 +1,15 @@
-from lib2to3.pgen2 import driver
 from django.contrib.auth import get_user_model
 from django.db.models import Q
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, status
+from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 
+
+from taxi.middleware import get_user
+
+
 from .models import Trip
-from .serializers import LogInSerializer, UserSerializer, NestedTripSerializer, TripSerializer
+from .serializers import LogInSerializer, UserSerializer, NestedTripSerializer
 
 
 class SignUpView(generics.CreateAPIView):
@@ -19,6 +23,11 @@ class LogInView(TokenObtainPairView):
     queryset = get_user_model().objects.all()
     serializer_class = LogInSerializer
 
+class LogOutView(TokenObtainPairView):
+
+    permission_classes = (permissions.IsAuthenticated,)
+
+    
 
 
 
@@ -43,3 +52,5 @@ class TripView(generics.ListCreateAPIView):
         if user.group == 'passenger':
             return Trip.objects.filter(passenger=user)
         return Trip.objects.none()
+
+

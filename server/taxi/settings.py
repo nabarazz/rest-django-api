@@ -165,17 +165,9 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': datetime.timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=1),
+    # 'ACCESS_TOKEN_LIFETIME_MOBILE': datetime.timedelta(minutes=60),
+    # 'REFRESH_TOKEN_LIFETIME_MOBILE': datetime.timedelta(days=1),
     'USER_ID_CLAIM': 'id',
+
 }
 
-# CORS_ALLOWED_ORIGINS = []
-
-
-# if DEBUG:
-#     CORS_ALLOWED_ORIGINS += [
-#         'http://localhost:3001',
-#     ]
-
-CORS_ORIGIN_WHITELIST = [
-    "http://localhost:3001",
-]

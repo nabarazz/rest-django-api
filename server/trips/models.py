@@ -1,3 +1,4 @@
+from email.policy import default
 import uuid
 
 from django.conf import settings
@@ -32,7 +33,11 @@ class Trip(models.Model):
     updated = models.DateTimeField(auto_now=True)
     pick_up_address = models.CharField(max_length=255)
     drop_off_address = models.CharField(max_length=255)
-    price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    price = models.FloatField(
+        null=True,
+        blank=True,
+        help_text='Price in NRS',
+    )
     
     status = models.CharField(max_length=20, choices=STATUSES, default=REQUESTED)
     driver = models.ForeignKey(

@@ -5,6 +5,7 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
+
 from .models import Trip, User
 
 
@@ -65,11 +66,18 @@ class LogInSerializer(TokenObtainPairSerializer):
 
 
 
+
+
+
 class TripSerializer(serializers.ModelSerializer):
     class Meta:
         model = Trip
         fields = '__all__'
         read_only_fields = ('id', 'created', 'updated', 'price')
+
+
+
+    
 
 
 class NestedTripSerializer(serializers.ModelSerializer):
@@ -80,3 +88,8 @@ class NestedTripSerializer(serializers.ModelSerializer):
         model = Trip
         fields = '__all__'
         depth = 1
+
+
+
+
+
