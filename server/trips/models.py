@@ -35,8 +35,6 @@ class Trip(models.Model):
     drop_off_address = models.CharField(max_length=255)
     price = models.FloatField(
         null=True,
-        blank=True,
-        help_text='Price in NRS',
     )
     
     status = models.CharField(max_length=20, choices=STATUSES, default=REQUESTED)

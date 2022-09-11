@@ -41,6 +41,7 @@ class TripView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         serializer.save(passenger=self.request.user)
         serializer.save(driver=self.request.user)
+        print(serializer.data)
 
         
     def get_queryset(self):
