@@ -19,27 +19,7 @@ class UserSerializer(serializers.ModelSerializer):
     password1 = serializers.CharField(write_only=True)
     password2 = serializers.CharField(write_only=True)
     group = serializers.CharField()
-    phone_number = serializers.IntegerField()
-
-    class Meta:
-        model = User
-        fields = ('id', 'email', 'password1', 'password2', 'group', 'phone_number')
-        extra_kwargs = {
-            'password1': {'write_only': True},
-            'password2': {'write_only': True},
-            'group': {'write_only': True},
-            'phone_number': {'write_only': True},
-        }
-
-    def create(self, validated_data):
-        user = User.objects.create_user(
-            validated_data['email'],
-            validated_data['password1'],
-            validated_data['password2'],
-            validated_data['group'],
-            validated_data['phone_number'],
-        )
-        return user
+    
 
     # validation_data
     def validate(self, data):
