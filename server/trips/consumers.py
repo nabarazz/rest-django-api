@@ -2,7 +2,7 @@
 from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 
-from trips.serializers import NestedTripSerializer, TripSerializer
+from trips.serializers import TripSerializer, TripDriverSerializer, TripPassengerSerializer
 from trips.models import Trip
 
 
@@ -18,7 +18,13 @@ class TaxiConsumer(AsyncJsonWebsocketConsumer):
 
     @database_sync_to_async
     def _get_trip_data(self, trip):
-        return NestedTripSerializer(trip).data
+        if trip.driver:
+            serializer = TripDriverSerializer(trip)
+        else:
+            serializer = TripPassengerSerializer(trip)
+        return serializer.data
+        # return TripDriverSerializer(trip).data
+
 
     @database_sync_to_async
     def _get_user_group(self, user):

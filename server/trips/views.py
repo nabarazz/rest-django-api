@@ -9,7 +9,7 @@ from taxi.middleware import get_user
 
 
 from .models import Trip
-from .serializers import LogInSerializer, UserSerializer, NestedTripSerializer
+from .serializers import LogInSerializer, UserSerializer, TripDriverSerializer, TripPassengerSerializer
 
 
 class SignUpView(generics.CreateAPIView):
@@ -23,23 +23,16 @@ class LogInView(TokenObtainPairView):
     queryset = get_user_model().objects.all()
     serializer_class = LogInSerializer
 
-class LogOutView(TokenObtainPairView):
-
-    permission_classes = (permissions.IsAuthenticated,)
-
-    
 
 
-
-
-class TripView(generics.ListCreateAPIView):
+class DriverTripView(generics.ListCreateAPIView):
     lookup_field = 'id'
     lookup_url_kwarg = 'trip_id'
-    serializer_class = NestedTripSerializer
+    serializer_class = TripDriverSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
     def perform_create(self, serializer):
-        serializer.save(passenger=self.request.user)
+        # serializer.save(passenger=self.request.user)
         serializer.save(driver=self.request.user)
         print(serializer.data)
 
@@ -50,8 +43,28 @@ class TripView(generics.ListCreateAPIView):
             return Trip.objects.filter(
                 Q(status=Trip.REQUESTED) | Q(driver=user)
             )
+        # if user.group == 'passenger':
+        #     return Trip.objects.filter(passenger=user)
+        return Trip.objects.none()
+
+class PassengerTripView(generics.ListCreateAPIView):
+    lookup_field = 'id'
+    lookup_url_kwarg = 'trip_id'
+    serializer_class = TripPassengerSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def perform_create(self, serializer):
+        serializer.save(passenger=self.request.user)
+        print(serializer.data)
+
+    def get_queryset(self):
+        user = self.request.user
         if user.group == 'passenger':
             return Trip.objects.filter(passenger=user)
         return Trip.objects.none()
+
+    
+
+
 
 

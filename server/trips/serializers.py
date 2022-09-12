@@ -1,4 +1,5 @@
 import email
+from lib2to3.pgen2 import driver
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from rest_framework import serializers
@@ -18,6 +19,7 @@ class UserSerializer(serializers.ModelSerializer):
     password1 = serializers.CharField(write_only=True)
     password2 = serializers.CharField(write_only=True)
     group = serializers.CharField()
+    phone_number = serializers.CharField()
 
     # validation_data
     def validate(self, data):
@@ -45,7 +47,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'username', 'password1', 'password2',
             'email', 'first_name', 'last_name', 'group',
-            'photo',
+            'photo', 'phone_number'
         )
         
         read_only_fields = ('id',)
@@ -70,24 +72,96 @@ class LogInSerializer(TokenObtainPairSerializer):
 
 
 class TripSerializer(serializers.ModelSerializer):
+
+
     class Meta:
         model = Trip
         fields = '__all__'
         read_only_fields = ('id', 'created', 'updated', 'price')
+
+    #print trip
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['passenger'] = {
+            'id': instance.passenger.id,
+            'username': instance.passenger.username,
+            'email': instance.passenger.email,
+            'frist_name': instance.passenger.first_name,
+            'last_name': instance.passenger.last_name,
+            
+        }
+        data['driver'] = {
+            'id': instance.driver.id,
+            'username': instance.driver.username,
+            'email': instance.driver.email,
+            'frist_name': instance.driver.first_name,
+            'last_name': instance.driver.last_name,
+            
+        }
+        return data
 
 
 
     
 
 
-class NestedTripSerializer(serializers.ModelSerializer):
+# class NestedTripSerializer(serializers.ModelSerializer):
+#     driver = UserSerializer(read_only=True)
+#     rider = UserSerializer(read_only=True)
+
+
+#     class Meta:
+#         model = Trip
+#         fields = '__all__'
+#         read_only_fields = ('id', 'created', 'updated', 'price')
+#         depth = 1
+
+
+class TripDriverSerializer(serializers.ModelSerializer):
     driver = UserSerializer(read_only=True)
-    rider = UserSerializer(read_only=True)
 
     class Meta:
         model = Trip
         fields = '__all__'
         depth = 1
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        
+        data['driver'] = {
+            'id': instance.driver.id,
+            'username': instance.driver.username,
+            'email': instance.driver.email,
+            'frist_name': instance.driver.first_name,
+            'last_name': instance.driver.last_name,
+            
+        }
+        return data
+
+class TripPassengerSerializer(serializers.ModelSerializer):
+    passenger = UserSerializer(read_only=True)
+
+    class Meta:
+        model = Trip
+        fields = '__all__'
+        depth = 1
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        
+        data['passenger'] = {
+            'id': instance.passenger.id,
+            'username': instance.passenger.username,
+            'email': instance.passenger.email,
+            'frist_name': instance.passenger.first_name,
+            'last_name': instance.passenger.last_name,
+            
+        }
+        return data
+        
+
+
+
 
 
 
