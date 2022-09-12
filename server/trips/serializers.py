@@ -117,28 +117,8 @@ class TripSerializer(serializers.ModelSerializer):
 #         depth = 1
 
 
-class TripDriverSerializer(serializers.ModelSerializer):
+class TripSerializer(serializers.ModelSerializer):
     driver = UserSerializer(read_only=True)
-
-    class Meta:
-        model = Trip
-        fields = '__all__'
-        depth = 1
-
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        
-        data['driver'] = {
-            'id': instance.driver.id,
-            'username': instance.driver.username,
-            'email': instance.driver.email,
-            'frist_name': instance.driver.first_name,
-            'last_name': instance.driver.last_name,
-            
-        }
-        return data
-
-class TripPassengerSerializer(serializers.ModelSerializer):
     passenger = UserSerializer(read_only=True)
 
     class Meta:
@@ -146,19 +126,19 @@ class TripPassengerSerializer(serializers.ModelSerializer):
         fields = '__all__'
         depth = 1
 
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        
-        data['passenger'] = {
-            'id': instance.passenger.id,
-            'username': instance.passenger.username,
-            'email': instance.passenger.email,
-            'frist_name': instance.passenger.first_name,
-            'last_name': instance.passenger.last_name,
-            
-        }
-        return data
-        
+    
+
+# class TripPassengerSerializer(serializers.ModelSerializer):
+#     passenger = UserSerializer(read_only=True)
+
+#     class Meta:
+#         model = Trip
+#         fields = '__all__'
+#         depth = 1
+
+    
+
+
 
 
 

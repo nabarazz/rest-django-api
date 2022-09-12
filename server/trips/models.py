@@ -19,11 +19,14 @@ class User(AbstractUser):
 
 class Trip(models.Model):
     REQUESTED = 'REQUESTED'
+    ACCEPTED = 'ACCEPTED'
     STARTED = 'STARTED'
     IN_PROGRESS = 'IN_PROGRESS'
     COMPLETED = 'COMPLETED'
+
     STATUSES = (
         (REQUESTED, REQUESTED),
+        (ACCEPTED, ACCEPTED),   
         (STARTED, STARTED),
         (IN_PROGRESS, IN_PROGRESS),
         (COMPLETED, COMPLETED),
