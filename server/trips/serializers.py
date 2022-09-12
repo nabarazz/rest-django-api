@@ -80,28 +80,6 @@ class TripSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'created', 'updated', 'price', 'driver', 'passenger')
 
     #print trip
-    def to_representation(self, instance):
-        data = super().to_representation(instance)
-        data['passenger'] = {
-            'id': instance.passenger.id,
-            'username': instance.passenger.username,
-            'email': instance.passenger.email,
-            'frist_name': instance.passenger.first_name,
-            'last_name': instance.passenger.last_name,
-            
-        }
-        data['driver'] = {
-            'id': instance.driver.id,
-            'username': instance.driver.username,
-            'email': instance.driver.email,
-            'frist_name': instance.driver.first_name,
-            'last_name': instance.driver.last_name,
-            
-        }
-        return data
-
-
-
     
 
 
@@ -110,10 +88,23 @@ class NestedTripSerializer(serializers.ModelSerializer):
     driver = UserSerializer(read_only=True)
     passenger = UserSerializer(read_only=True)
 
+    #display only custom meta field id, created, updated, status and passenger.email
+    def to_representation(self, instance):
+        return {
+            'id': instance.id,
+            'created': instance.created,
+            'updated': instance.updated,
+            'status': instance.status,
+            'passenger': instance.passenger.email,
+        }
+
     class Meta:
         model = Trip
         fields = '__all__'
         depth = 1
+
+        #filiter fields
+        read_only_fields = ('id', 'created', 'updated', 'price')
 
     
 

@@ -33,20 +33,25 @@ class TripView(viewsets.ReadOnlyModelViewSet):
     serializer_class = NestedTripSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
+    # desplay only nestedtripserializer id only on response
+    # def retrieve(self, request, *args, **kwargs):
+    #     instance = self.get_object()
+    #     serializer = self.get_serializer(instance)
+    #     return Response(serializer.data['id'])
 
     def get_queryset(self):
         user = self.request.user
         if user.group == 'passenger':
             #request to all drivers
-            return Trip.objects.filter(passenger=user)
-            print()
+            return Trip.objects.filter(Q(passenger=user) | Q(status='ACCEPTED')
+            print('passenger')
 
         if user.group == 'driver':
             #request to all passengers
             return Trip.objects.filter(Q(driver=user) | Q(status=Trip.REQUESTED))
             print('driver')
 
-            # return Trip.objects.filter(passenger=user)
+            
         return Trip.objects.none()
  
     
