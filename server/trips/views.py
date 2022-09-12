@@ -1,3 +1,4 @@
+from lib2to3.pgen2 import driver
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 from rest_framework import generics, permissions, viewsets
@@ -30,20 +31,28 @@ class LogInView(TokenObtainPairView):
 class TripView(viewsets.ReadOnlyModelViewSet):
     lookup_field = 'id'
     lookup_url_kwarg = 'trip_id'
+    
     serializer_class = NestedTripSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
-    # desplay only nestedtripserializer id only on response
-    # def retrieve(self, request, *args, **kwargs):
-    #     instance = self.get_object()
-    #     serializer = self.get_serializer(instance)
-    #     return Response(serializer.data['id'])
+    # call only id and status field of trip model
+    
+        
+
 
     def get_queryset(self):
         user = self.request.user
+
         if user.group == 'passenger':
             #request to all drivers
             passenger_trip = Trip.objects.filter(Q(passenger=user) & Q(status=Trip.REQUESTED))
+            #pop driver and passenger field and add passenger.email and passenger.username
+
+            passenger_trip = passenger_trip.values('id', 'status', 'pick_up_address', 'drop_off_address', 'created', 'updated', 'passenger__email', 'passenger__username')
+            #add passenger email
+            
+            
+
             # retrieve passenger id and status
             return passenger_trip
             
@@ -51,7 +60,13 @@ class TripView(viewsets.ReadOnlyModelViewSet):
 
         if user.group == 'driver':
             #request to all passengers
-            return Trip.objects.filter(Q(driver=user) & Q(status=Trip.ACCEPTED))
+            driver_trip = Trip.objects.filter(Q(driver=user) & Q(status=Trip.ACCEPTED))
+
+            #pop driver and passenger field 
+            driver_trip = driver_trip.values('id', 'status', 'pick_up_address', 'drop_off_address', 'created', 'updated')
+            #add user.email on driver_trip 
+            
+            return driver_trip
             print('driver')
 
             
