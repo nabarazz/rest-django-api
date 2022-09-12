@@ -71,7 +71,7 @@ class LogInSerializer(TokenObtainPairSerializer):
 
 
 
-class TripSerializer(serializers.ModelSerializer):
+class NestedTripSerializer(serializers.ModelSerializer):
 
 
     class Meta:

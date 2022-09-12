@@ -9,7 +9,7 @@ from taxi.middleware import get_user
 
 
 from .models import Trip
-from .serializers import LogInSerializer, UserSerializer, TripSerializer
+from .serializers import LogInSerializer, UserSerializer, NestedTripSerializer
 
 
 class SignUpView(generics.CreateAPIView):
@@ -52,7 +52,7 @@ class LogInView(TokenObtainPairView):
 class TripView(generics.ListCreateAPIView):
     lookup_field = 'id'
     lookup_url_kwarg = 'trip_id'
-    serializer_class = TripSerializer
+    serializer_class = NestedTripSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
 
