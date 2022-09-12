@@ -87,16 +87,7 @@ class TripSerializer(serializers.ModelSerializer):
 class NestedTripSerializer(serializers.ModelSerializer):
     driver = UserSerializer(read_only=True)
     passenger = UserSerializer(read_only=True)
-
-    #display only custom meta field id, created, updated, status and passenger.email
-    def to_representation(self, instance):
-        return {
-            'id': instance.id,
-            'created': instance.created,
-            'updated': instance.updated,
-            'status': instance.status,
-            'passenger': instance.passenger.email,
-        }
+    
 
     class Meta:
         model = Trip

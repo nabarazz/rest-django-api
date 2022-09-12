@@ -43,12 +43,15 @@ class TripView(viewsets.ReadOnlyModelViewSet):
         user = self.request.user
         if user.group == 'passenger':
             #request to all drivers
-            return Trip.objects.filter(Q(passenger=user) | Q(status=Trip.REQUESTED))
-            print('passenger')
+            passenger_trip = Trip.objects.filter(Q(passenger=user) & Q(status=Trip.REQUESTED))
+            # retrieve passenger id and status
+            return passenger_trip
+            
+            
 
         if user.group == 'driver':
             #request to all passengers
-            return Trip.objects.filter(Q(driver=user) | Q(status=Trip.ACCEPTED))
+            return Trip.objects.filter(Q(driver=user) & Q(status=Trip.ACCEPTED))
             print('driver')
 
             
