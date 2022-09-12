@@ -25,28 +25,6 @@ class LogInView(TokenObtainPairView):
 
 
 
-# class DriverTripView(generics.ListCreateAPIView):
-#     lookup_field = 'id'
-#     lookup_url_kwarg = 'trip_id'
-#     serializer_class = TripDriverSerializer
-#     permission_classes = (permissions.IsAuthenticated,)
-
-#     def get_queryset(self):
-#         user = self.request.user
-#         if user.group == 'driver':
-#             return Trip.objects.filter(driver=user)
-#         return Trip.objects.none()
-
-#     def update(self, request, *args, **kwargs):
-#         instance = self.get_object()
-#         serializer = self.get_serializer(instance, data=request.data, partial=True)
-#         serializer.is_valid(raise_exception=True)
-#         self.perform_update(serializer)
-#         if serializer.data['status'] == 'ACCEPTED':
-#             Trip.objects.filter(~Q(id=instance.id)).filter(
-#                 passenger=instance.passenger
-#             ).update(status=Trip.CANCELED)
-#         return Response(serializer.data)
     
 
 class TripView(generics.ListCreateAPIView):

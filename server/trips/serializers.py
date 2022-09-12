@@ -71,7 +71,7 @@ class LogInSerializer(TokenObtainPairSerializer):
 
 
 
-class NestedTripSerializer(serializers.ModelSerializer):
+class TripSerializer(serializers.ModelSerializer):
 
 
     class Meta:
@@ -105,19 +105,8 @@ class NestedTripSerializer(serializers.ModelSerializer):
     
 
 
-# class NestedTripSerializer(serializers.ModelSerializer):
-#     driver = UserSerializer(read_only=True)
-#     rider = UserSerializer(read_only=True)
 
-
-#     class Meta:
-#         model = Trip
-#         fields = '__all__'
-#         read_only_fields = ('id', 'created', 'updated', 'price')
-#         depth = 1
-
-
-class TripSerializer(serializers.ModelSerializer):
+class NestedTripSerializer(serializers.ModelSerializer):
     driver = UserSerializer(read_only=True)
     passenger = UserSerializer(read_only=True)
 
