@@ -61,7 +61,7 @@ class TripView(viewsets.ReadOnlyModelViewSet):
 
         if user.group == 'driver':
             #request to all passengers
-            driver_trip = Trip.objects.filter(Q(driver=user) & Q(status=Trip.REQUESTED))
+            driver_trip = Trip.objects.filter(Q(driver=user) | Q(status=Trip.REQUESTED))
 
             #pop driver and passenger field 
             driver_trip = driver_trip.values('id', 'status', 'pick_up_address', 'drop_off_address', 'created', 'updated')
