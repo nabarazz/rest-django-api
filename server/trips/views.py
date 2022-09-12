@@ -45,11 +45,12 @@ class TripView(viewsets.ReadOnlyModelViewSet):
 
         if user.group == 'passenger':
             #request to all drivers
-            passenger_trip = Trip.objects.filter(Q(passenger=user) & Q(status=Trip.REQUESTED))
+            passenger_trip = Trip.objects.filter(Q(passenger=user))
             #pop driver and passenger field and add passenger.email and passenger.username
 
             passenger_trip = passenger_trip.values('id', 'status', 'pick_up_address', 'drop_off_address', 'created', 'updated', 'passenger__email', 'passenger__username')
             #add passenger email
+            
             
             
 
@@ -60,7 +61,7 @@ class TripView(viewsets.ReadOnlyModelViewSet):
 
         if user.group == 'driver':
             #request to all passengers
-            driver_trip = Trip.objects.filter(Q(driver=user) & Q(status=Trip.ACCEPTED))
+            driver_trip = Trip.objects.filter(Q(driver=user) & Q(status=Trip.REQUESTED))
 
             #pop driver and passenger field 
             driver_trip = driver_trip.values('id', 'status', 'pick_up_address', 'drop_off_address', 'created', 'updated')
