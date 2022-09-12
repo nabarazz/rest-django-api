@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db.models import Q
-from rest_framework import generics, permissions, status
+from rest_framework import generics, permissions, viewsets
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 
@@ -27,7 +27,7 @@ class LogInView(TokenObtainPairView):
 
     
 
-class TripView(generics.ListCreateAPIView):
+class TripView(viewsets.ReadOnlyModelViewSet):
     lookup_field = 'id'
     lookup_url_kwarg = 'trip_id'
     serializer_class = NestedTripSerializer
@@ -39,24 +39,24 @@ class TripView(generics.ListCreateAPIView):
         if user.group == 'passenger':
             #request to all drivers
             return Trip.objects.filter(passenger=user)
+            print()
 
         if user.group == 'driver':
             #request to all passengers
             return Trip.objects.filter(Q(driver=user) | Q(status=Trip.REQUESTED))
+            print('driver')
 
             # return Trip.objects.filter(passenger=user)
         return Trip.objects.none()
  
-    def update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-        if serializer.data['status'] == 'ACCEPTED':
-            Trip.objects.filter(~Q(id=instance.id)).filter(
-                driver=instance.driver
-            ).update(status=Trip.CANCELED)
-        return Response(serializer.data)
+    
+class CreateTripView(generics.CreateAPIView):
+    serializer_class = NestedTripSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def perform_create(self, serializer):
+        serializer.save(passenger=self.request.user)
+        print('create')
 
     
 

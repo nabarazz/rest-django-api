@@ -77,7 +77,7 @@ class TripSerializer(serializers.ModelSerializer):
     class Meta:
         model = Trip
         fields = '__all__'
-        read_only_fields = ('id', 'created', 'updated', 'price')
+        read_only_fields = ('id', 'created', 'updated', 'price', 'driver', 'passenger')
 
     #print trip
     def to_representation(self, instance):
