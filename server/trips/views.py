@@ -1,3 +1,4 @@
+import json
 from lib2to3.pgen2 import driver
 from urllib import request
 from django.contrib.auth import get_user_model
@@ -45,7 +46,9 @@ class TripView(viewsets.ReadOnlyModelViewSet):
         if user.group == 'driver':
             trip = Trip.objects.filter(Q(status='REQUESTED'))
             
-            return trip.values('id', 'status', 'created', 'updated', 'pick_up_address', 'drop_off_address', 'price')
+            trip = trip.values('id', 'status', 'created', 'updated', 'pick_up_address', 'drop_off_address', 'price')
+            
+            return trip.tolist()
         
 
             
