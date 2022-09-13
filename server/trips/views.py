@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from django.db.models import Q
 from rest_framework import generics, permissions, viewsets
 from rest_framework.response import Response
+
 from rest_framework.renderers import JSONRenderer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from itertools import groupby
@@ -61,23 +62,45 @@ class TripView(viewsets.ReadOnlyModelViewSet):
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = NestedTripSerializer(queryset, many=True, context={'request': request})
-        
-        
-        data = {
-            'id': serializer.data[0]['id'],
-            'created': serializer.data[0]['created'],
-            'updated': serializer.data[0]['updated'],
-            'pick_up_address': serializer.data[0]['pick_up_address'],
-            'drop_off_address': serializer.data[0]['drop_off_address'],
-            'price': serializer.data[0]['price'],
-            'passsenger__name': serializer.data[0]['passenger']['first_name'],
-            'passenger__email': serializer.data[0]['passenger']['email'],
-            'driver__name': serializer.data[0]['driver']['first_name'],
-            'driver__email': serializer.data[0]['driver']['email'],
-            
+        # display all trips data with respect to user id
+        i = 3
+        #for all conditions
 
-        }
-        return Response(data)
+        
+        for i in range (len(serializer.data)):
+            
+            if i:
+                key = {
+                    'id': serializer.data[i]['id'],
+                    'created': serializer.data[i]['created'],
+                    'updated': serializer.data[i]['updated'],
+                    'pick_up_address': serializer.data[i]['pick_up_address'],
+                    'drop_off_address': serializer.data[i]['drop_off_address'],
+                    'price': serializer.data[i]['price'],
+                    'status': serializer.data[i]['status'],
+                    'passenger': serializer.data[i]['passenger']['username'],
+                    'driver': serializer.data[i]['driver']['username'],
+                    # 'passenger__username': serializer.data[i]['passenger']['passenger__username'],
+    
+    
+                }
+                return Response(key)
+            i+=1
+            
+                
+            
+    
+                
+            # data = {
+        #     'id': serializer.data[3]['id'],
+        #     'created': serializer.data[3]['created'],
+        #     'updated': serializer.data[3]['updated'],
+        #     'pick_up_address': serializer.data[3]['pick_up_address'],
+        #     'drop_off_address': serializer.data[3]['drop_off_address'],
+        #     'price': serializer.data[3]['price'],
+        #     'passsenger__name': serializer.data[3]['passenger']['first_name'],
+        #     'passenger__email': serializer.data[3]['passenger']['email'],
+        # }
 
 
 

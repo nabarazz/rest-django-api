@@ -87,7 +87,8 @@ class TripSerializer(serializers.ModelSerializer):
 class NestedTripSerializer(serializers.ModelSerializer):
     driver = UserSerializer(read_only=True)
     passenger = UserSerializer(read_only=True)
-   # custom in nested serializer
+
+
         
     class Meta:
         model = Trip
