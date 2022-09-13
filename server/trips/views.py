@@ -36,15 +36,8 @@ class TripView(viewsets.ReadOnlyModelViewSet):
     serializer_class = NestedTripSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
-    # call only id and status field of trip model
 
-    #filiter serializer_class field
 
-    def validate(self, data):
-        data
-    
-    
-        
 
 
     def get_queryset(self):
@@ -52,17 +45,12 @@ class TripView(viewsets.ReadOnlyModelViewSet):
         if user.group == 'driver':
             trip = Trip.objects.filter(Q(status='REQUESTED'))
             
-               #pop passenger and driver field
-            trip.pop('passenger')
-            trip.pop('driver')
-
-            
-            return trip
+            return trip.values('id', 'status', 'created', 'updated', 'pick_up_address', 'drop_off_address', 'price')
         
 
             
         if user.group == 'passenger':
-            return Trip.objects.filter(Q(status='ACCEPTED'))
+            return Trip.objects.filter(Q(status='ACCEPTED')).values('id', 'status', 'created', 'updated', 'pick_up_address', 'drop_off_address', 'price')
             
         
         return Trip.objects.none()
