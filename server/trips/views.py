@@ -47,8 +47,7 @@ class TripView(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         user = self.request.user
         if user.group == 'driver':
-            trip = Trip.objects.filter(Q(status='REQUESTED'))
-            #only return status='REQUESTED' data
+            trip = Trip.objects.filter(Q(status='REQUESTED'))          #only return status='REQUESTED' data
             return trip.values('id', 'status', 'created', 'updated', 'price', 'pick_up_address', 'drop_off_address')
             
         if user.group == 'passenger':
@@ -64,6 +63,15 @@ class CreateTripView(generics.CreateAPIView):
     def perform_create(self, serializer):
         serializer.save(passenger=self.request.user)
         print('create')
+
+    def get_queryset(self):
+        user = self.request.user
+        
+            
+        if user.group == 'passenger':
+            return Trip.objects.filter(user.group == 'passenger')
+        
+        return Trip.objects.none()
 
     
 
