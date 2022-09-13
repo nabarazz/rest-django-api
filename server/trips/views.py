@@ -5,7 +5,9 @@ from django.contrib.auth import get_user_model
 from django.db.models import Q
 from rest_framework import generics, permissions, viewsets
 from rest_framework.response import Response
+from rest_framework.renderers import JSONRenderer
 from rest_framework_simplejwt.views import TokenObtainPairView
+from itertools import groupby
 
 
 from taxi.middleware import get_user
@@ -46,17 +48,39 @@ class TripView(viewsets.ReadOnlyModelViewSet):
         if user.group == 'driver':
             trip = Trip.objects.filter(Q(status='REQUESTED'))
             
-            trip = trip.values('id', 'status', 'created', 'updated', 'pick_up_address', 'drop_off_address', 'price')
-            
-            return trip.tolist()
-        
-
-            
+            return trip
+                          
         if user.group == 'passenger':
-            return Trip.objects.filter(Q(status='ACCEPTED')).values('id', 'status', 'created', 'updated', 'pick_up_address', 'drop_off_address', 'price')
+            trip = Trip.objects.filter(Q(status='ACCEPTED'))
+            return trip
             
         
         return Trip.objects.none()
+
+    # list 'id', 'created', 'updated', 'pick_up_address', 'drop_off_address', 'price'
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = NestedTripSerializer(queryset, many=True, context={'request': request})
+        
+        data = {
+            'id': serializer.data[0]['id'],
+            'created': serializer.data[0]['created'],
+            'updated': serializer.data[0]['updated'],
+            'pick_up_address': serializer.data[0]['pick_up_address'],
+            'drop_off_address': serializer.data[0]['drop_off_address'],
+            'price': serializer.data[0]['price'],
+            'passsenger__name': serializer.data[0]['passenger']['first_name'],
+            'passenger__email': serializer.data[0]['passenger']['email'],
+            'driver__name': serializer.data[0]['driver']['first_name'],
+            'driver__email': serializer.data[0]['driver']['email'],
+            
+
+        }
+        return Response(data)
+
+
+
+        
  
     
 class CreateTripView(generics.CreateAPIView):

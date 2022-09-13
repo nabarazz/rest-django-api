@@ -87,31 +87,7 @@ class TripSerializer(serializers.ModelSerializer):
 class NestedTripSerializer(serializers.ModelSerializer):
     driver = UserSerializer(read_only=True)
     passenger = UserSerializer(read_only=True)
-
-
-
    # custom in nested serializer
-    def to_representation(self, instance):
-        #pop passenger and driver
-        
-        
-        data = super().to_representation(instance)
-        is_list_view = isinstance(instance, list)
-        #passenger email and username
-        extra_ret = {
-            'email': self.context['request'].user.email,
-            'username': self.context['request'].user.username,
-            
-
-        }
-        if is_list_view:
-            for item in data:
-                item.update(extra_ret)
-        else:
-            data.update(extra_ret)
-        return data
-        
-
         
     class Meta:
         model = Trip
