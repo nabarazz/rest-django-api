@@ -36,6 +36,9 @@ class TripView(viewsets.ReadOnlyModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
 
     # call only id and status field of trip model
+
+    #filiter serializer_class field
+    
     
         
 
@@ -44,29 +47,15 @@ class TripView(viewsets.ReadOnlyModelViewSet):
         user = self.request.user
 
         if user.group == 'passenger':
-            #request to all drivers
-            passenger_trip = Trip.objects.filter(Q(passenger=user))
-            #pop driver and passenger field and add passenger.email and passenger.username
-
-            passenger_trip = passenger_trip.values('id', 'status', 'pick_up_address', 'drop_off_address', 'created', 'updated', 'passenger__email', 'passenger__username')
-            #add passenger email
-            
-            
-            
-
-            # retrieve passenger id and status
+            #request to all trips and display only id , status, created, updated, pidk_up_address, drop_off_address, price and passenger email and username
+            passenger_trip = Trip.objects.filter(passenger=user).values('id', 'status', 'created', 'updated', 'pick_up_address', 'drop_off_address', 'price', 'passenger__email', 'passenger__username')
             return passenger_trip
-            
-            
 
         if user.group == 'driver':
+            
             #request to all passengers
             driver_trip = Trip.objects.filter(Q(driver=user) | Q(status=Trip.REQUESTED))
 
-            #pop driver and passenger field 
-            driver_trip = driver_trip.values('id', 'status', 'pick_up_address', 'drop_off_address', 'created', 'updated')
-            #add user.email on driver_trip 
-            
             return driver_trip
             print('driver')
 

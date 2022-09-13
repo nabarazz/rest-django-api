@@ -94,8 +94,9 @@ class NestedTripSerializer(serializers.ModelSerializer):
         fields = '__all__'
         depth = 1
 
-        #filiter fields
-        read_only_fields = ('id', 'created', 'updated', 'price')
+    
+
+    
 
     
 
