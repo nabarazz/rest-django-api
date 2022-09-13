@@ -48,10 +48,10 @@ class TripView(viewsets.ReadOnlyModelViewSet):
         user = self.request.user
         if user.group == 'driver':
             trip = Trip.objects.filter(Q(status='REQUESTED'))          #only return status='REQUESTED' data
-            return trip.values('id', 'status', 'created', 'updated', 'price', 'pick_up_address', 'drop_off_address')
+            return trip.values('id', 'status', 'created', 'updated', 'price', 'pick_up_address', 'drop_off_address', 'passenger__id')
             
         if user.group == 'passenger':
-            return Trip.objects.filter(Q(status='ACCEPTED')).values('id', 'status', 'created', 'updated', 'price', 'pick_up_address', 'drop_off_address')
+            return Trip.objects.filter(Q(status='ACCEPTED')).values('id', 'status', 'created', 'updated', 'price', 'pick_up_address', 'drop_off_address', 'driver__id')
         
         return Trip.objects.none()
  
