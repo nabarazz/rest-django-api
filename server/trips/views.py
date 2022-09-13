@@ -62,6 +62,7 @@ class TripView(viewsets.ReadOnlyModelViewSet):
         queryset = self.get_queryset()
         serializer = NestedTripSerializer(queryset, many=True, context={'request': request})
         
+        
         data = {
             'id': serializer.data[0]['id'],
             'created': serializer.data[0]['created'],
