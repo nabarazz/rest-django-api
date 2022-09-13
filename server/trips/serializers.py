@@ -88,45 +88,35 @@ class NestedTripSerializer(serializers.ModelSerializer):
     driver = UserSerializer(read_only=True)
     passenger = UserSerializer(read_only=True)
 
-    #call only passenger email
 
+   # custom in nested serializer
+    def to_representation(self, instance):
+        #pop passenger and driver
+        
+        
+        data = super().to_representation(instance)
+        is_list_view = isinstance(instance, list)
+        extra_ret = {
+            'email': 'passenger.email',
+            'username': 'passenger.username',
+            'first_name': 'passenger.first_name',
+            'last_name': 'passenger.last_name',
+        }
+        if is_list_view:
+            for item in data:
+                item.update(extra_ret)
+        else:
+            data.update(extra_ret)
+        return data
+        
+    #hide passenger and driver
+    def to_internal_value(self, data):
+        data.pop('passenger', None)
+        data.pop('driver', None)
+        return super().to_internal_value(data)
 
-    
-
+        
     class Meta:
         model = Trip
         fields = '__all__'
         depth = 1
-
-    #display passenger username and passenger email
-        
-
-
-    #filiter passenger and driver field
-
-
-    
-
-    
-
-    
-
-# class TripPassengerSerializer(serializers.ModelSerializer):
-#     passenger = UserSerializer(read_only=True)
-
-#     class Meta:
-#         model = Trip
-#         fields = '__all__'
-#         depth = 1
-
-    
-
-
-
-
-
-
-
-
-
-

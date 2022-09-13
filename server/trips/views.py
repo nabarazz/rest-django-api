@@ -39,6 +39,9 @@ class TripView(viewsets.ReadOnlyModelViewSet):
     # call only id and status field of trip model
 
     #filiter serializer_class field
+
+    def validate(self, data):
+        data
     
     
         
@@ -47,11 +50,20 @@ class TripView(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         user = self.request.user
         if user.group == 'driver':
-            trip = Trip.objects.filter(Q(status='REQUESTED'))          #only return status='REQUESTED' data
-            return trip.values('id', 'status', 'created', 'updated', 'price', 'pick_up_address', 'drop_off_address', 'passenger__id')
+            trip = Trip.objects.filter(Q(status='REQUESTED'))
+            
+               #pop passenger and driver field
+            trip.pop('passenger')
+            trip.pop('driver')
+
+            
+            return trip
+        
+
             
         if user.group == 'passenger':
-            return Trip.objects.filter(Q(status='ACCEPTED')).values('id', 'status', 'created', 'updated', 'price', 'pick_up_address', 'drop_off_address', 'driver__id')
+            return Trip.objects.filter(Q(status='ACCEPTED'))
+            
         
         return Trip.objects.none()
  
@@ -73,6 +85,11 @@ class CreateTripView(generics.CreateAPIView):
         
         return Trip.objects.none()
 
+#convert trip_id
+
+
+
+    
     
 
 
