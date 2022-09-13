@@ -48,8 +48,16 @@ class TripView(viewsets.ReadOnlyModelViewSet):
 
         if user.group == 'passenger':
             #request to all trips and display only id , status, created, updated, pidk_up_address, drop_off_address, price and passenger email and username
-            passenger_trip = Trip.objects.filter(passenger=user).values('id', 'status', 'created', 'updated', 'pick_up_address', 'drop_off_address', 'price', 'passenger__email', 'passenger__username')
+            passenger_trip = Trip.objects.filter(passenger=user)
+            #pass email and username to passenger_trip.value
+            # passenger_trip = passenger_trip.values('id', 'status', 'created', 'updated', 'pick_up_address', 'drop_off_address', 'price', 'passenger__email', 'passenger__username')
+            print(passenger_trip)
+
             return passenger_trip
+            
+
+            # passenger_trip = passenger_trip.filter(passenger=user.email)
+            # return passenger_trip
 
         if user.group == 'driver':
             
