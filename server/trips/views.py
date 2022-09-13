@@ -1,4 +1,5 @@
 from lib2to3.pgen2 import driver
+from urllib import request
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 from rest_framework import generics, permissions, viewsets
@@ -45,29 +46,14 @@ class TripView(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-
-        if user.group == 'passenger':
-            #request to all trips and display only id , status, created, updated, pidk_up_address, drop_off_address, price and passenger email and username
-            passenger_trip = Trip.objects.filter(passenger=user)
-            #pass email and username to passenger_trip.value
-            # passenger_trip = passenger_trip.values('id', 'status', 'created', 'updated', 'pick_up_address', 'drop_off_address', 'price', 'passenger__email', 'passenger__username')
-            print(passenger_trip)
-
-            return passenger_trip
-            
-
-            # passenger_trip = passenger_trip.filter(passenger=user.email)
-            # return passenger_trip
-
         if user.group == 'driver':
+            trip = Trip.objects.filter( Q(status='REQUESTED'))
+            #only return status='REQUESTED' data
+            return trip.values('id', 'status', 'created', 'updated', 'price', 'pick_up_address', 'drop_off_address')
             
-            #request to all passengers
-            driver_trip = Trip.objects.filter(Q(driver=user) | Q(status=Trip.REQUESTED))
-
-            return driver_trip
-            print('driver')
-
-            
+        if user.group == 'passenger':
+            return Trip.objects.filter(Q(status='ACCEPTED')).values('id', 'status', 'created', 'updated', 'price', 'pick_up_address', 'drop_off_address')
+        
         return Trip.objects.none()
  
     
