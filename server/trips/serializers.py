@@ -97,20 +97,25 @@ class NestedTripSerializer(serializers.ModelSerializer):
     #display passenger username and passenger email
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation['passenger'] = {
+        if representation['passenger']:
+            representation['passenger'] = {
             'id': instance.passenger.id,
             'username': instance.passenger.username,
             'email': instance.passenger.email,
             'first_name': instance.passenger.first_name,
             'last_name': instance.passenger.last_name,
         }
-        representation['driver'] = {
+        elif representation['driver']:
+            representation['driver'] = {
             'id': instance.driver.id,
             'username': instance.driver.username,
             'email': instance.driver.email,
             'first_name': instance.driver.first_name,
             'last_name': instance.driver.last_name,
         }
+        else:
+            representation
+        
         return representation
         
 
